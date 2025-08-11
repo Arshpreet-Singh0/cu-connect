@@ -6,8 +6,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, Target } from "lucide-react";
 import Navigation from "@/components/navigation";
 import { useSearchParams } from "next/navigation";
-import type { ChatMessage, Question } from "@/types";
-import { Card, CardContent } from "@/components/ui/card";
+import type { ChatMessage, Mentor, Question } from "@/types";
+import { Card } from "@/components/ui/card";
 
 import {
   topStudents,
@@ -30,6 +30,7 @@ import { FAQTab } from "@/components/dashboard/tabs/faq-tab";
 import { AIAssistantTab } from "@/components/dashboard/tabs/ai-assistant-tab";
 import { DCPDTab } from "@/components/dashboard/tabs/dcpd-tab";
 import { useAppSelector } from "@/store/hooks";
+import { axiosInstance } from "@/configs/axios";
 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -55,6 +56,7 @@ export default function DashboardPage() {
   const [newMessage, setNewMessage] = useState("");
 
   const searchParams = useSearchParams();
+  const [mentors, setMentors] = useState<Mentor[]>([]);
 
   useEffect(() => {
     const tab = searchParams.get("tab");
@@ -65,6 +67,21 @@ export default function DashboardPage() {
       setActiveTab(tab);
     }
   }, [searchParams]);
+
+  const getMentors = async () => {
+    try {
+      const res = await axiosInstance.get("/mentors");
+      console.log(res);
+
+      setMentors(res?.data?.mentors);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getMentors();
+  }, []);
 
   const handleSendMessage = () => {
     if (newMessage.trim()) {
@@ -158,128 +175,103 @@ export default function DashboardPage() {
         <Tabs
           value={activeTab}
           onValueChange={setActiveTab}
-          className="space-y-10"
+          className="space-y-0"
         >
-          {/* Nav Tabs */}
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 bg-muted/30 p-2 rounded-2xl shadow-inner backdrop-blur-sm">
-            {[
-              {
-                value: "dashboard",
-                label: "Dashboard",
-                color: "from-purple-500 to-indigo-500",
-              },
-              {
-                value: "chat",
-                label: "Chat",
-                color: "from-blue-500 to-cyan-500",
-              },
-              {
-                value: "mentors",
-                label: "Mentors",
-                color: "from-green-500 to-emerald-500",
-              },
-              {
-                value: "faq",
-                label: "FAQ",
-                color: "from-yellow-500 to-orange-500",
-              },
-              {
-                value: "chatbot",
-                label: "AI Assistant",
-                color: "from-pink-500 to-fuchsia-500",
-              },
-              {
-                value: "dcpd",
-                label: "DCPD",
-                color: "from-red-500 to-rose-500",
-              },
-            ].map((tab) => (
-              <TabsTrigger
-                key={tab.value}
-                value={tab.value}
-                className={`rounded-xl px-4 py-2 text-sm font-medium text-center transition-all duration-300
-        data-[state=active]:bg-gradient-to-r ${tab.color} data-[state=active]:text-white
-        data-[state=inactive]:bg-muted/40 data-[state=inactive]:text-muted-foreground
-        hover:scale-[1.03]`}
-              >
-                {tab.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
+          <div className="flex min-h-screen">
+            {/* Sidebar Tabs */}
+            <aside className="w-64 bg-muted/20 border-r p-4 mt-24">
+              <TabsList className="flex flex-col gap-2 w-full bg-transparent p-0">
+                {[
+                  { value: "dashboard", label: "Dashboard" },
+                  { value: "chat", label: "Chat" },
+                  { value: "mentors", label: "Mentors" },
+                  { value: "faq", label: "Ask Questions" },
+                  { value: "chatbot", label: "AI Assistant" },
+                  { value: "dcpd", label: "DCPD" },
+                  { value: "exp", label: "Interview Experience" },
+                ].map((tab) => (
+                  <TabsTrigger
+                    key={tab.value}
+                    value={tab.value}
+                    className={`w-full text-left px-4 py-2 rounded-lg border transition
+              data-[state=active]:bg-primary data-[state=active]:text-white
+              hover:bg-muted`}
+                  >
+                    {tab.label}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </aside>
 
-          {/* Dashboard */}
-          <TabsContent value="dashboard" className="space-y-6">
-            <StatsCards
-              onlineMentorsCount={mentors.filter((m) => m.isOnline).length}
-            />
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <RecentQuestions
-                questions={questions}
-                onAskQuestion={handleAskQuestion}
-              />
-              <AvailableMentors
-                mentors={mentors}
-                connectedUsers={connectedUsers}
-                onConnect={handleConnectUser}
-              />
-            </div>
-          </TabsContent>
+            {/* Main Content */}
+            <main className="flex-1 overflow-y-auto">
+              <TabsContent value="dashboard" className="space-y-6">
+                <StatsCards
+                  onlineMentorsCount={mentors.filter((m) => m.isOnline).length}
+                />
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <RecentQuestions />
+                  <AvailableMentors
+                    mentors={mentors}
+                    connectedUsers={connectedUsers}
+                    onConnect={handleConnectUser}
+                  />
+                </div>
+              </TabsContent>
 
-          {/* Chat */}
-          <TabsContent value="chat" className="space-y-6">
-            <Card className="bg-card/50 backdrop-blur-sm border-0 rounded-2xl shadow-xl p-6">
-              <ChatTab
-                peerChats={peerChats}
-                searchQuery={searchQuery}
-                onSearchChange={setSearchQuery}
-              />
-            </Card>
-          </TabsContent>
+              <TabsContent value="chat">
+                <Card className="bg-card/50 backdrop-blur-sm border-0 rounded-2xl shadow-xl p-6">
+                  <ChatTab
+                    peerChats={peerChats}
+                    searchQuery={searchQuery}
+                    onSearchChange={setSearchQuery}
+                  />
+                </Card>
+              </TabsContent>
 
-          {/* Mentors */}
-          <TabsContent value="mentors" className="space-y-6">
-            <Card className="bg-card/50 backdrop-blur-sm border-0 rounded-2xl shadow-xl p-6">
-              <MentorsTab
-                searchQuery={searchQuery}
-                selectedDepartment={selectedDepartment}
-                connectedUsers={connectedUsers}
-                onSearchChange={setSearchQuery}
-                onDepartmentChange={setSelectedDepartment}
-                onConnect={handleConnectUser}
-              />
-            </Card>
-          </TabsContent>
+              <TabsContent value="mentors">
+                <Card className="bg-card/50 backdrop-blur-sm border-0 rounded-2xl shadow-xl p-6">
+                  <MentorsTab
+                    mentors={mentors}
+                    searchQuery={searchQuery}
+                    selectedDepartment={selectedDepartment}
+                    connectedUsers={connectedUsers}
+                    onSearchChange={setSearchQuery}
+                    onDepartmentChange={setSelectedDepartment}
+                    onConnect={handleConnectUser}
+                  />
+                </Card>
+              </TabsContent>
 
-          {/* FAQ */}
-          <TabsContent value="faq" className="space-y-6">
-            <Card className="bg-card/50 backdrop-blur-sm border-0 rounded-2xl shadow-xl p-6">
-              <FAQTab
-                faqs={faqs}
-                searchQuery={searchQuery}
-                onSearchChange={setSearchQuery}
-              />
-            </Card>
-          </TabsContent>
+              <TabsContent value="faq">
+                <Card className="bg-card/50 backdrop-blur-sm border-0 rounded-2xl shadow-xl p-6">
+                  <FAQTab
+                    faqs={faqs}
+                    searchQuery={searchQuery}
+                    onSearchChange={setSearchQuery}
+                  />
+                </Card>
+              </TabsContent>
 
-          {/* AI Assistant */}
-          <TabsContent value="chatbot" className="space-y-6">
-            <Card className="bg-card/50 backdrop-blur-sm border-0 rounded-2xl shadow-xl p-6">
-              <AIAssistantTab
-                chatMessages={chatMessages}
-                newMessage={newMessage}
-                onMessageChange={setNewMessage}
-                onSendMessage={handleSendMessage}
-                onQuickTopic={handleQuickTopic}
-              />
-            </Card>
-          </TabsContent>
+              <TabsContent value="chatbot">
+                <Card className="bg-card/50 backdrop-blur-sm border-0 rounded-2xl shadow-xl p-6">
+                  <AIAssistantTab
+                    chatMessages={chatMessages}
+                    newMessage={newMessage}
+                    onMessageChange={setNewMessage}
+                    onSendMessage={handleSendMessage}
+                    onQuickTopic={handleQuickTopic}
+                  />
+                </Card>
+              </TabsContent>
 
-          {/* DCPD */}
-          <TabsContent value="dcpd" className="space-y-6">
-            <Card className="bg-card/50 backdrop-blur-sm border-0 rounded-2xl shadow-xl p-6">
-              <DCPDTab topStudents={topStudents} />
-            </Card>
-          </TabsContent>
+              <TabsContent value="dcpd">
+                <Card className="bg-card/50 backdrop-blur-sm border-0 rounded-2xl shadow-xl p-6">
+                  <DCPDTab topStudents={topStudents} />
+                </Card>
+              </TabsContent>
+            </main>
+          </div>
         </Tabs>
       </main>
     </div>

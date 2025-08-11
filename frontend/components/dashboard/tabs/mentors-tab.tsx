@@ -12,6 +12,7 @@ import { useEffect, useState } from "react"
 import { axiosInstance } from "@/configs/axios"
 
 interface MentorsTabProps {
+  mentors : Mentor[]
   searchQuery: string
   selectedDepartment: string
   connectedUsers: Set<number>
@@ -21,13 +22,13 @@ interface MentorsTabProps {
 }
 
 export function MentorsTab({
+  mentors,
   searchQuery,
   selectedDepartment,
   connectedUsers,
   onSearchChange,
   onDepartmentChange,
 }: MentorsTabProps) {
-  const [mentors, setMentors] = useState<Mentor[]>([]);
   const filteredMentors = mentors.filter((mentor) => {
     const matchesSearch =
       mentor?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -37,22 +38,6 @@ export function MentorsTab({
     return matchesSearch && matchesDepartment
   })
 
-
-  const getMentors = async()=>{
-    try {
-      const res = await axiosInstance.get("/mentors");
-      console.log(res);
-      
-      setMentors(res?.data?.mentors);
-    } catch (error) {
-      console.log(error);
-      
-    }
-  }
-
-  useEffect(()=>{
-    getMentors();
-  },[]);
 
 
   return (

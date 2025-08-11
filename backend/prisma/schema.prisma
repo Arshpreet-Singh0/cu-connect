@@ -28,13 +28,16 @@ model User {
 
   socialLinks      SocialLinks?
   codingProfiles   CodingProfiles?
-  currCompany     String?
+  currCompany      String?
   overallRankScore Float           @default(0)
 
   chatbotHistory ChatbotHistory[]
 
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
+  Experience Experience[]
+  Questions  Questions[]
+  Replies    Replies[]
 }
 
 enum Role {
@@ -84,3 +87,32 @@ model ChatbotHistory {
 //   accepted
 //   rejected
 // }
+
+model Experience {
+  id         Int    @id @default(autoincrement())
+  user       User   @relation(fields: [userId], references: [id])
+  userId     String
+  company    String
+  verdict    String
+  experience String
+}
+
+model Questions {
+  id       Int      @id @default(autoincrement())
+  user     User     @relation(fields: [userId], references: [id])
+  userId   String
+  question String
+  desccription  String?
+  createdAt DateTime  @default(now())
+  replies  Replies[]
+}
+
+model Replies {
+  id         Int       @id @default(autoincrement())
+  user       User      @relation(fields: [userId], references: [id])
+  userId     String
+  question   Questions @relation(fields: [questionId], references: [id])
+  questionId Int
+  createdAt DateTime  @default(now())
+  reply      String
+}

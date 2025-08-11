@@ -1,30 +1,89 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { MessageCircle, Plus, Heart, Eye } from "lucide-react"
-import type { Question } from "@/types"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { MessageCircle, Plus, Heart, Eye } from "lucide-react";
+// import type { Question } from "@/types";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { axiosInstance } from "@/configs/axios";
+import { toast } from "sonner";
+import { useEffect, useState } from "react";
 
-interface RecentQuestionsProps {
-  questions: Question[]
-  onAskQuestion: (title: string, description: string) => void
+interface Question{
+      id: string;
+      question: string;
+      desccription: string;
+      user: {
+        id: string;
+        department: string;
+        name: string;
+      };
+    
 }
 
-export function RecentQuestions({ questions, onAskQuestion }: RecentQuestionsProps) {
+export function RecentQuestions() {
+  const [open, setOpen] = useState(false);
+  const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
+  const [reply, setReply] = useState("");
+  const [questions, setQuestions] = useState<
+    Question[]
+  >([]);
+  const onAskQuestion = async (question: string, desccription: string) => {
+    try {
+      const res = await axiosInstance.post("/askquestion", {
+        question,
+        desccription,
+      });      
+
+      if (res?.data?.success) {
+        toast.success("Question posted successfully.");
+        fetchQuestions();
+      }
+    } catch (error) {
+      toast.error("unable to post question at the moment.");
+    }
+  };
+   const handleReplyClick = (q : any) => {
+    setSelectedQuestion(q);
+    setOpen(true);
+  };
+  const handleSubmitReply = () => {
+    if(!selectedQuestion) return;
+
+    console.log("Reply to:", selectedQuestion?.id, "Content:", reply);
+    // TODO: send reply to backend here
+    setOpen(false);
+    setReply("");
+  };
+
+  
+  const fetchQuestions = async()=>{
+    try {
+      const res = await axiosInstance.get("/question");
+      if(res?.data){
+        setQuestions(res?.data);
+      }
+    } catch (error) {
+      toast.error("unable to fetch question.")
+    }
+  };
+  useEffect(()=>{
+    fetchQuestions();
+  },[])
   return (
     <Card className="border-0 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 bg-card/50 backdrop-blur-sm">
       <CardHeader className="flex flex-row items-center justify-between">
@@ -45,58 +104,90 @@ export function RecentQuestions({ questions, onAskQuestion }: RecentQuestionsPro
           <DialogContent className="rounded-2xl">
             <DialogHeader>
               <DialogTitle>Ask a Question</DialogTitle>
-              <DialogDescription>Get help from your peers and seniors</DialogDescription>
+              <DialogDescription>
+                Get help from your peers and seniors
+              </DialogDescription>
             </DialogHeader>
             <QuestionForm onSubmit={onAskQuestion} />
           </DialogContent>
         </Dialog>
       </CardHeader>
       <CardContent className="space-y-4">
-        {questions.slice(0, 3).map((q) => (
+        {questions?.slice(0, 3).map((q) => (
           <div
             key={q.id}
             className="border-l-4 border-purple-500 pl-4 p-3 rounded-r-xl bg-muted/30 hover:bg-muted/50 transition-colors"
           >
-            <h4 className="font-medium hover:text-purple-600 cursor-pointer">{q.question}</h4>
+            <h4 className="font-medium hover:text-purple-600 cursor-pointer">
+              {q.question}
+            </h4>
             <div className="flex items-center gap-2 text-sm text-muted-foreground mt-2">
-              <span>{q.author}</span>
+              <span>{q?.user?.name}</span>
               <Badge variant="outline" className="rounded-full">
-                {q.department}
+                {q?.user?.department}
               </Badge>
-              <span>•</span>
-              <span className="flex items-center gap-1">
-                <Heart className="h-3 w-3" />
-                {q.likes}
-              </span>
-              <span>•</span>
-              <span className="flex items-center gap-1">
-                <Eye className="h-3 w-3" />
-                {q.views}
-              </span>
-              <span>•</span>
-              <span>{q.time}</span>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="ml-auto text-purple-600 hover:text-purple-800"
+                onClick={() => handleReplyClick(q)}
+              >
+                Reply
+              </Button>
             </div>
           </div>
         ))}
       </CardContent>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Reply to: {selectedQuestion?.question}</DialogTitle>
+          </DialogHeader>
+
+          <Textarea
+            placeholder="Type your reply here..."
+            value={reply}
+            onChange={(e) => setReply(e.target.value)}
+          />
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSubmitReply}>
+              Submit Reply
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
-  )
+  );
 }
 
-function QuestionForm({ onSubmit }: { onSubmit: (title: string, description: string) => void }) {
+function QuestionForm({
+  onSubmit,
+}: {
+  onSubmit: (title: string, description: string) => void;
+}) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
-    const title = formData.get("title") as string
-    const description = formData.get("description") as string
-    onSubmit(title, description)
-  }
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const title = formData.get("title") as string;
+    const description = formData.get("description") as string;
+    onSubmit(title, description);
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <Label htmlFor="title">Question Title</Label>
-        <Input id="title" name="title" placeholder="Enter your question title..." className="rounded-xl" required />
+        <Input
+          id="title"
+          name="title"
+          placeholder="Enter your question title..."
+          className="rounded-xl mt-2"
+          required
+        />
       </div>
       <div>
         <Label htmlFor="description">Description</Label>
@@ -105,7 +196,7 @@ function QuestionForm({ onSubmit }: { onSubmit: (title: string, description: str
           name="description"
           placeholder="Provide more details about your question..."
           rows={4}
-          className="rounded-xl"
+          className="rounded-xl mt-2"
           required
         />
       </div>
@@ -113,5 +204,5 @@ function QuestionForm({ onSubmit }: { onSubmit: (title: string, description: str
         Post Question
       </Button>
     </form>
-  )
+  );
 }

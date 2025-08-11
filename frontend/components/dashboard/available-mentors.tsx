@@ -13,7 +13,7 @@ interface AvailableMentorsProps {
 }
 
 export function AvailableMentors({ mentors, connectedUsers, onConnect }: AvailableMentorsProps) {
-  const onlineMentors = mentors.filter((m) => m.isOnline).slice(0, 2)
+  // const onlineMentors = mentors.filter((m) => m.isOnline).slice(0, 2)
 
   return (
     <Card className="border-0 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 bg-card/50 backdrop-blur-sm">
@@ -24,7 +24,7 @@ export function AvailableMentors({ mentors, connectedUsers, onConnect }: Availab
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {onlineMentors.map((mentor) => (
+        {mentors.map((mentor) => (
           <div
             key={mentor.id}
             className="flex items-center gap-3 p-3 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors"
@@ -46,7 +46,7 @@ export function AvailableMentors({ mentors, connectedUsers, onConnect }: Availab
             <div className="flex-1">
               <h4 className="font-medium">{mentor.name}</h4>
               <p className="text-sm text-muted-foreground">
-                {mentor.role} at {mentor.company}
+                Working at {mentor.currCompany}
               </p>
               <div className="flex items-center gap-1 mt-1">
                 <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
@@ -54,8 +54,8 @@ export function AvailableMentors({ mentors, connectedUsers, onConnect }: Availab
                 <span className="text-xs text-muted-foreground">({mentor.sessions} sessions)</span>
               </div>
             </div>
-            <Button size="sm" onClick={() => onConnect(mentor.id)} className="rounded-xl">
-              {connectedUsers.has(mentor.id) ? "Connected" : "Connect"}
+            <Button size="sm" className="rounded-xl">
+              {connectedUsers.has(mentor.id) ? "Connected" : "Chat Now"}
             </Button>
           </div>
         ))}

@@ -18,13 +18,30 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import { axiosInstance } from "@/configs/axios"
+import { toast } from "sonner"
 
 interface RecentQuestionsProps {
   questions: Question[]
-  onAskQuestion: (title: string, description: string) => void
 }
 
-export function RecentQuestions({ questions, onAskQuestion }: RecentQuestionsProps) {
+
+
+export function RecentQuestions({ questions}: RecentQuestionsProps) {
+
+  const onAskQuestion = async(question : string, desccription: string)=>{
+    console.log(question);
+    
+    try {
+      const res = await axiosInstance.post("/askquestion", {question, desccription});
+
+      if(res?.data?.success){
+        toast.success("Question posted successfully.");
+      }
+    } catch (error) {
+      toast.error("unable to post question at the moment.");
+    }
+  }
   return (
     <Card className="border-0 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 bg-card/50 backdrop-blur-sm">
       <CardHeader className="flex flex-row items-center justify-between">
@@ -96,7 +113,7 @@ function QuestionForm({ onSubmit }: { onSubmit: (title: string, description: str
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <Label htmlFor="title">Question Title</Label>
-        <Input id="title" name="title" placeholder="Enter your question title..." className="rounded-xl" required />
+        <Input id="title" name="title" placeholder="Enter your question title..." className="rounded-xl mt-4" required />
       </div>
       <div>
         <Label htmlFor="description">Description</Label>
@@ -105,7 +122,7 @@ function QuestionForm({ onSubmit }: { onSubmit: (title: string, description: str
           name="description"
           placeholder="Provide more details about your question..."
           rows={4}
-          className="rounded-xl"
+          className="rounded-xl mt-2"
           required
         />
       </div>
