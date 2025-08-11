@@ -1,8 +1,14 @@
 import express, { type NextFunction, type Request, type Response } from "express";
+import dotenv from "dotenv";
+dotenv.config();
 import cookieParser from "cookie-parser";
 import { register, login, verifyUser, logout } from "./controllers/auth";
 import { authMiddleware } from "./middlewares/authMiddleware";
 import cors from 'cors';
+import { generateText } from "ai";
+import { openrouter } from "@openrouter/ai-sdk-provider";
+import { careerPrompt } from "./utils/careerPrompt";
+import { prisma } from "./utils/prisma";
 
 const app = express();
 const port = 8080;
@@ -28,6 +34,51 @@ app.post("/signup", register);
 app.post("/login", login);
 app.get("/verify", authMiddleware, verifyUser);
 app.post("/logout", logout);
+
+app.post("/career-advice", async (req, res) => {
+  try {
+    const { question } = req.body;
+    if (!question) {
+      return res.status(400).json({ error: "Please provide a question" });
+    }
+
+    // Generate AI response
+    const { text } = await generateText({
+      model: openrouter("anthropic/claude-3-haiku"),
+      prompt: careerPrompt(question)
+    });
+
+    res.json({ advice: text });
+  } catch (error) {
+    console.error("Career advice API error:", error);
+    res.status(500).json({ error: "Failed to get advice" });
+  }
+});
+
+app.get("/mentors", async(req, res, next)=>{
+  try {
+    const mentors = await prisma.user.findMany({
+      where : {
+        role : "mentor",
+      },
+      select : {
+        name : true,
+        codingProfiles : true,
+        profileImage : true,
+        skills : true,
+        socialLinks : true,
+        currCompany : true,
+        department : true,
+        role : true,
+      }
+    });
+
+    res.status(200).json({mentors});
+  } catch (error) {
+    next(error);
+  }
+})
+
 
 // Start server
 app.listen(port, () => {

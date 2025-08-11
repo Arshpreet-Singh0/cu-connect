@@ -75,6 +75,7 @@ export const register = async (
       role,
       department,
       yearOfGraduation,
+      currCompany,
       bio,
       skills,
       socialLinks, // { linkedin?, github?, portfolio? }
@@ -85,6 +86,7 @@ export const register = async (
       password?: string;
       role?: "student" | "mentor";
       department?: string;
+      currCompany? : string,
       yearOfGraduation?: number;
       bio?: string;
       skills?: string[];
@@ -120,6 +122,7 @@ export const register = async (
       role,
       department,
       yearOfGraduation: yearOfGraduation ?? null,
+      currCompany,
       bio: bio ?? null,
       skills: Array.isArray(skills) ? skills : [],
       // leave overallRankScore default

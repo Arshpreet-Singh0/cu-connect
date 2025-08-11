@@ -1,8 +1,8 @@
-"use client"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+"use client";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   MessageCircle,
   Users,
@@ -16,23 +16,20 @@ import {
   Shield,
   Globe,
   Sparkles,
-} from "lucide-react"
-import { useTheme } from "next-themes"
-import Navigation from "@/components/navigation"
-import Link from "next/link"
-import { useAppSelector } from "@/store/hooks"
+} from "lucide-react";
+import { useTheme } from "next-themes";
+import Navigation from "@/components/navigation";
+import Link from "next/link";
 
 export default function LandingPage() {
-  const { theme } = useTheme()
-  const {user} = useAppSelector(s=>s.auth);
-  console.log(user);
-  
+  const { theme } = useTheme();
 
   const features = [
     {
       icon: <MessageCircle className="h-8 w-8" />,
       title: "Peer Chat",
-      description: "Connect instantly with seniors, peers, and alumni for real-time guidance",
+      description:
+        "Connect instantly with seniors, peers, and alumni for real-time guidance",
       color: "from-blue-500 to-cyan-500",
     },
     {
@@ -44,7 +41,8 @@ export default function LandingPage() {
     {
       icon: <Bot className="h-8 w-8" />,
       title: "AI Assistant",
-      description: "Department-specific AI chatbot for instant academic support",
+      description:
+        "Department-specific AI chatbot for instant academic support",
       color: "from-green-500 to-emerald-500",
     },
     {
@@ -53,14 +51,14 @@ export default function LandingPage() {
       description: "Track your academic progress and coding achievements",
       color: "from-orange-500 to-red-500",
     },
-  ]
+  ];
 
   const stats = [
     { number: "10K+", label: "Active Students" },
     { number: "500+", label: "Expert Mentors" },
     { number: "50K+", label: "Questions Answered" },
     { number: "95%", label: "Success Rate" },
-  ]
+  ];
 
   const testimonials = [
     {
@@ -87,7 +85,7 @@ export default function LandingPage() {
         "As a mentor, I love how easy it is to connect with students and share my industry experience through this platform.",
       rating: 5,
     },
-  ]
+  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -96,7 +94,7 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-blue-500/5 to-green-500/10"></div>
-        <div className="container mx-auto px-4 py-20 relative md:w-[80%]">
+        <div className="container mx-auto px-4 py-20 relative  md:w-[80%]">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
               <div className="space-y-4">
@@ -108,13 +106,22 @@ export default function LandingPage() {
                   CUConnect
                 </h1>
                 <p className="text-xl lg:text-2xl text-muted-foreground leading-relaxed">
-                  Bridging <span className="text-purple-600 font-semibold">Guidance</span>,
-                  <span className="text-blue-600 font-semibold"> Mentorship</span> &
+                  Bridging{" "}
+                  <span className="text-purple-600 font-semibold">
+                    Guidance
+                  </span>
+                  ,
+                  <span className="text-blue-600 font-semibold">
+                    {" "}
+                    Mentorship
+                  </span>{" "}
+                  &
                   <span className="text-green-600 font-semibold"> Support</span>
                 </p>
                 <p className="text-lg text-muted-foreground max-w-2xl">
-                  The ultimate platform for Chandigarh University students to connect with peers, seniors, and alumni
-                  for real-time academic and career guidance.
+                  The ultimate platform for Chandigarh University students to
+                  connect with peers, seniors, and alumni for real-time academic
+                  and career guidance.
                 </p>
               </div>
 
@@ -141,8 +148,12 @@ export default function LandingPage() {
               <div className="flex items-center gap-8 pt-4">
                 {stats.map((stat, index) => (
                   <div key={index} className="text-center">
-                    <div className="text-2xl lg:text-3xl font-bold text-foreground">{stat.number}</div>
-                    <div className="text-sm text-muted-foreground">{stat.label}</div>
+                    <div className="text-2xl lg:text-3xl font-bold text-foreground">
+                      {stat.number}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      {stat.label}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -160,18 +171,25 @@ export default function LandingPage() {
                       </Avatar>
                       <div>
                         <h3 className="font-semibold">Alex Chen</h3>
-                        <p className="text-sm text-muted-foreground">CSE Student</p>
+                        <p className="text-sm text-muted-foreground">
+                          CSE Student
+                        </p>
                       </div>
-                      <Badge className="ml-auto bg-green-500/10 text-green-600 border-green-500/20">Online</Badge>
+                      <Badge className="ml-auto bg-green-500/10 text-green-600 border-green-500/20">
+                        Online
+                      </Badge>
                     </div>
 
                     <div className="space-y-4">
                       <div className="bg-muted/50 rounded-2xl p-4">
-                        <p className="text-sm">How do I prepare for Google interviews?</p>
+                        <p className="text-sm">
+                          How do I prepare for Google interviews?
+                        </p>
                       </div>
                       <div className="bg-gradient-to-r from-purple-500 to-blue-500 text-white rounded-2xl p-4 ml-8">
                         <p className="text-sm">
-                          Focus on DSA, system design, and behavioral questions. I can share my preparation strategy!
+                          Focus on DSA, system design, and behavioral questions.
+                          I can share my preparation strategy!
                         </p>
                       </div>
                     </div>
@@ -190,16 +208,18 @@ export default function LandingPage() {
 
       {/* Features Section */}
       <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4  md:w-[80%]">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-gradient-to-r from-purple-500/10 to-blue-500/10 text-purple-600 border-purple-500/20">
+            <Badge className="mb-4 bg-gradient-to-r from-purple-500/10 to-blue-500/10 text-purple-600 border-purple-500/20 text-white">
               Features
             </Badge>
             <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-              Everything you need to <span className="text-purple-600">succeed</span>
+              Everything you need to{" "}
+              <span className="text-purple-600">succeed</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Comprehensive tools and resources designed specifically for Chandigarh University students
+              Comprehensive tools and resources designed specifically for
+              Chandigarh University students
             </p>
           </div>
 
@@ -215,8 +235,12 @@ export default function LandingPage() {
                   >
                     {feature.icon}
                   </div>
-                  <h3 className="text-xl font-semibold mb-4">{feature.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
+                  <h3 className="text-xl font-semibold mb-4">
+                    {feature.title}
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {feature.description}
+                  </p>
                 </CardContent>
               </Card>
             ))}
@@ -225,83 +249,117 @@ export default function LandingPage() {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4 md:w-[80%]">
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4  md:w-[80%]">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            {/* Left Side */}
             <div className="space-y-8">
-              <div>
-                <Badge className="mb-4 bg-gradient-to-r from-green-500/10 to-emerald-500/10 text-green-600 border-green-500/20">
+              <div className="text-left">
+                <Badge className="mb-4 bg-gradient-to-r from-purple-500/10 to-blue-500/10 text-purple-600 border border-purple-500/20 text-xl text-white">
                   Why Choose CUConnect
                 </Badge>
                 <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-                  Built for <span className="text-green-600">CU Students</span>
+                  Built for <span className="text-purple-600">CU Students</span>
                 </h2>
-                <p className="text-xl text-muted-foreground">
-                  Designed specifically for the Chandigarh University ecosystem with features that matter most to your
-                  academic journey.
+                <p className="text-xl text-muted-foreground max-w-2xl">
+                  Designed specifically for the Chandigarh University ecosystem
+                  with features that matter most to your academic journey.
                 </p>
               </div>
 
+              {/* Benefits List */}
               <div className="space-y-6">
                 {[
                   {
                     icon: <Zap className="h-6 w-6" />,
                     title: "Instant Connections",
-                    description: "Connect with the right people at the right time for immediate help",
+                    description:
+                      "Connect with the right people at the right time for immediate help",
+                    color: "from-yellow-500 to-orange-500",
                   },
                   {
                     icon: <Shield className="h-6 w-6" />,
                     title: "Verified Community",
-                    description: "All members are verified CU students, alumni, and faculty",
+                    description:
+                      "All members are verified CU students, alumni, and faculty",
+                    color: "from-blue-500 to-cyan-500",
                   },
                   {
                     icon: <Globe className="h-6 w-6" />,
                     title: "24/7 Availability",
-                    description: "Get help anytime with our AI assistant and global alumni network",
+                    description:
+                      "Get help anytime with our AI assistant and global alumni network",
+                    color: "from-green-500 to-emerald-500",
                   },
                 ].map((benefit, index) => (
-                  <div key={index} className="flex gap-4 p-4 rounded-2xl hover:bg-muted/50 transition-colors">
-                    <div>
-                      <div className="flex-shrink-0 p-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl">
-                      {benefit.icon}
-                    </div>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold mb-2">{benefit.title}</h4>
-                      <p className="text-muted-foreground">{benefit.description}</p>
-                    </div>
-                  </div>
+                  <Card
+                    key={index}
+                    className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 border-0 bg-card/50 backdrop-blur-sm rounded-2xl"
+                  >
+                    <CardContent className="flex items-start gap-4 p-6">
+                      <div
+                        className={`flex-shrink-0 p-3 rounded-2xl bg-gradient-to-r ${benefit.color} text-white group-hover:scale-110 transition-transform duration-300`}
+                      >
+                        {benefit.icon}
+                      </div>
+                      <div>
+                        <h4 className="text-lg font-semibold mb-2">
+                          {benefit.title}
+                        </h4>
+                        <p className="text-muted-foreground">
+                          {benefit.description}
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
                 ))}
               </div>
             </div>
 
+            {/* Right Side - Metrics */}
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-3xl blur-3xl"></div>
-              <div className="relative grid grid-cols-2 gap-4">
-                <Card className="bg-card/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl p-6 h-32">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-green-600 mb-2">98%</div>
-                    <div className="text-sm text-muted-foreground">Student Satisfaction</div>
-                  </div>
-                </Card>
-                <Card className="bg-card/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl p-6 mt-8">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-blue-600 mb-2">24/7</div>
-                    <div className="text-sm text-muted-foreground">AI Support</div>
-                  </div>
-                </Card>
-                <Card className="bg-card/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl p-6 -mt-4 h-32">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-purple-600 mb-2">500+</div>
-                    <div className="text-sm text-muted-foreground">Expert Mentors</div>
-                  </div>
-                </Card>
-                <Card className="bg-card/80 backdrop-blur-sm border-0 shadow-xl rounded-2xl p-6 mt-4">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-orange-600 mb-2">10K+</div>
-                    <div className="text-sm text-muted-foreground">Active Users</div>
-                  </div>
-                </Card>
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-3xl blur-3xl"></div>
+              <div className="relative grid grid-cols-2 gap-6">
+                {[
+                  {
+                    value: "98%",
+                    label: "Student Satisfaction",
+                    color: "text-green-600",
+                    stagger: "mt-0",
+                  },
+                  {
+                    value: "24/7",
+                    label: "AI Support",
+                    color: "text-blue-600",
+                    stagger: "mt-4",
+                  },
+                  {
+                    value: "500+",
+                    label: "Expert Mentors",
+                    color: "text-purple-600",
+                    stagger: "mt-2",
+                  },
+                  {
+                    value: "10K+",
+                    label: "Active Users",
+                    color: "text-orange-600",
+                    stagger: "mt-6",
+                  },
+                ].map((stat, i) => (
+                  <Card
+                    key={i}
+                    className={`bg-card/60 backdrop-blur-xl border-0 shadow-xl rounded-3xl p-6 transition-all hover:shadow-2xl ${stat.stagger}`}
+                  >
+                    <div className="text-center">
+                      <div className={`text-3xl font-bold ${stat.color} mb-2`}>
+                        {stat.value}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        {stat.label}
+                      </div>
+                    </div>
+                  </Card>
+                ))}
               </div>
             </div>
           </div>
@@ -312,11 +370,11 @@ export default function LandingPage() {
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4 md:w-[85%]">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-gradient-to-r from-orange-500/10 to-red-500/10 text-orange-600 border-orange-500/20">
+            <Badge className="mb-4 bg-gradient-to-r from-purple-500/10 to-blue-500/10 text-white border-orange-500/20">
               Testimonials
             </Badge>
             <h2 className="text-4xl lg:text-5xl font-bold mb-6">
-              What our <span className="text-orange-600">community</span> says
+              What our <span className="text-purple-600">community</span> says
             </h2>
           </div>
 
@@ -329,13 +387,20 @@ export default function LandingPage() {
                 <CardContent className="p-8">
                   <div className="flex items-center gap-1 mb-4">
                     {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <Star
+                        key={i}
+                        className="h-4 w-4 fill-yellow-400 text-yellow-400"
+                      />
                     ))}
                   </div>
-                  <p className="text-muted-foreground mb-6 leading-relaxed">"{testimonial.content}"</p>
+                  <p className="text-muted-foreground mb-6 leading-relaxed">
+                    "{testimonial.content}"
+                  </p>
                   <div className="flex items-center gap-3">
                     <Avatar className="h-12 w-12">
-                      <AvatarImage src={testimonial.avatar || "/placeholder.svg"} />
+                      <AvatarImage
+                        src={testimonial.avatar || "/placeholder.svg"}
+                      />
                       <AvatarFallback>
                         {testimonial.name
                           .split(" ")
@@ -345,7 +410,9 @@ export default function LandingPage() {
                     </Avatar>
                     <div>
                       <div className="font-semibold">{testimonial.name}</div>
-                      <div className="text-sm text-muted-foreground">{testimonial.role}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {testimonial.role}
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -360,9 +427,12 @@ export default function LandingPage() {
         <div className="container mx-auto px-4">
           <Card className="bg-gradient-to-r from-purple-600 via-blue-600 to-green-600 border-0 rounded-3xl overflow-hidden">
             <CardContent className="p-16 text-center text-white">
-              <h2 className="text-4xl lg:text-5xl font-bold mb-6">Ready to transform your academic journey?</h2>
+              <h2 className="text-4xl lg:text-5xl font-bold mb-6">
+                Ready to transform your academic journey?
+              </h2>
               <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-                Join thousands of CU students who are already benefiting from our platform
+                Join thousands of CU students who are already benefiting from
+                our platform
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/auth/signup">
@@ -396,17 +466,24 @@ export default function LandingPage() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center gap-3 mb-4 md:mb-0">
               <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
-                <img src="https://worldwidetranscripts.com/wp-content/uploads/2024/12/Chandigarh-University-Logo-400x400-1.png" alt="CU" />
+                <img
+                  src="https://worldwidetranscripts.com/wp-content/uploads/2024/12/Chandigarh-University-Logo-400x400-1.png"
+                  alt="cu"
+                />
               </div>
               <div>
                 <h3 className="font-bold">CUConnect</h3>
-                <p className="text-sm text-muted-foreground">Future of Learning</p>
+                <p className="text-sm text-muted-foreground">
+                  Future of Learning
+                </p>
               </div>
             </div>
-            <div className="text-sm text-muted-foreground">© 2025 CUConnect. Made with ❤️ for Chandigarh University</div>
+            <div className="text-sm text-muted-foreground">
+              ©️ 2025 CUConnect. Made with ❤️ for Chandigarh University
+            </div>
           </div>
         </div>
       </footer>
     </div>
-  )
+  );
 }

@@ -18,10 +18,12 @@ export interface Student extends User {
 }
 
 export interface Mentor extends User {
-  role: string
+  role: string;
+  currCompany : string;
   company: string
   experience: string
-  expertise: string[]
+  expertise: string[];
+  skills : string[];
   rating: number
   sessions: number
 }
